@@ -1,0 +1,95 @@
+############################
+# Maven / Java
+############################
+target/
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+*.class
+*.log
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+############################
+# Maven Wrapper
+############################
+!.mvn/wrapper/maven-wrapper.jar
+
+############################
+# Spring / Env
+############################
+.env
+.env.*
+application-*.yml
+application-*.yaml
+application-*.properties
+
+############################
+# AWS / Kubernetes / ECS
+# (arquivos com segredos)
+############################
+ecs-task-clean.json
+task-definition.json
+kubernate/deployment.yaml
+kubernetes/*.yaml
+kubernetes/*.yml
+
+############################
+# Backups / Local only
+############################
+_backup_secrets/
+_local_only/
+*.secret
+*.secrets
+
+############################
+# STS (Spring Tool Suite)
+############################
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+############################
+# IntelliJ IDEA
+############################
+.idea
+*.iws
+*.iml
+*.ipr
+
+############################
+# NetBeans
+############################
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+############################
+# VS Code
+############################
+.vscode/
+
+############################
+# OS
+############################
+.DS_Store
+Thumbs.db
+
+############################
+# Git
+############################
+*.orig
+*.rej
