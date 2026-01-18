@@ -36,6 +36,7 @@ management:
   health:
     redis:
       enabled: false
+
 logging:
   level:
     root: INFO

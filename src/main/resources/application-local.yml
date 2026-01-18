@@ -10,5 +10,6 @@ spring:
     username: root
     password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver
+
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
