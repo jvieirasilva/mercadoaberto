@@ -5,7 +5,7 @@ aws:
     product-bucket: order-app-product-api
 
 server:
-  port: 8080  # ?? Volta pra 8080
+  port: 8080  # ?? Volta pra 8080 
   servlet:
     context-path: /
 
