@@ -16,7 +16,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.security.dto.ProductRequestDTO;
 import com.security.dto.ProductResponseDTO;
 import com.security.exception.ResourceNotFoundException;
+import com.security.model.Company;
 import com.security.model.Product;
+import com.security.repository.CompanyRepository;
 import com.security.repository.ProductRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -27,6 +29,7 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final S3UploadService s3UploadService;
+    private final CompanyRepository companyRepository;
     
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductService.class);
 
@@ -35,10 +38,15 @@ public class ProductService {
         Product product = new Product();
         applyDtoToEntity(dto, product);
 
+        Company company = companyRepository.findByIdWithProducts(dto.getCompanyId())
+        	    .orElseThrow(() -> new RuntimeException("Company não encontrada: " + dto.getCompanyId()));
+        product.setCompany(company);
         Product saved = productRepository.save(product);
         
         try {
             List<MultipartFile> images = dto.getProductImages();
+            
+           // company
 
             if (images != null && !images.isEmpty()) {
 
@@ -145,6 +153,20 @@ public class ProductService {
 
         return ret;
     }
+    
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDTO> searchByCompany(Long idCompany, String term, Pageable pageable) {
+        String normalized = (term == null) ? "" : term.trim();
+
+        Pageable safe = sanitizePageable(pageable);
+        
+        Page<ProductResponseDTO> ret = productRepository.searchByCompanyId(idCompany,normalized, safe)
+                .map(this::toResponse);
+
+        return ret;
+    }
+    
+    
 
     @Transactional
     public ProductResponseDTO update(Long id, ProductRequestDTO dto) {

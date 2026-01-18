@@ -13,9 +13,12 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.security.dto.CompanyResponseDTO;
 import com.security.dto.RegisterRequest;
 import com.security.dto.UserDTO;
+import com.security.model.Company;
 import com.security.model.EmailVerificationToken;
 import com.security.model.PasswordResetToken;
 import com.security.model.Role;
@@ -26,7 +29,6 @@ import com.security.repository.UserRepository;
 import com.security.reqeuest.AuthenticationRequest;
 import com.security.response.AuthenticationResponse;
 
-import jakarta.transaction.Transactional;
 
  
 
@@ -177,7 +179,7 @@ public class AuthenticationService {
                 .build();
     }
 
-
+    @Transactional(readOnly = true)
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
         try {
             authenticationManager.authenticate(
@@ -187,11 +189,28 @@ public class AuthenticationService {
                 )
             );
 
-            var user = repository.findByEmail(request.getEmail())
+            var user = repository.findByEmailWithCompany(request.getEmail())
                     .orElseThrow(() -> new RuntimeException("Usuário não encontrado ou Inactivo/Bloqueado"));
-            
-            
-            
+          
+            CompanyResponseDTO companyDTO = null;
+
+            if (user.getCompany() != null) {
+                Company c = user.getCompany();
+
+                companyDTO = CompanyResponseDTO.builder()
+                        .id(c.getId())
+                        .companyName(c.getCompanyName())
+                        .tradeName(c.getTradeName())
+                        .nif(c.getNif())
+                        .email(c.getEmail())
+                        .phone(c.getPhone())
+                        .address(c.getAddress())
+                        .postalCode(c.getPostalCode())
+                        .city(c.getCity())
+                        .country(c.getCountry())
+                        .isActive(c.getIsActive())
+                        .build();
+            }
 
             var jwtToken = jwtService.generateToken(user);
             var refreshToken = jwtService.generateRefreshToken(user);
@@ -205,9 +224,9 @@ public class AuthenticationService {
                     .lastLoginDateDisplay(user.getLastLoginDateDisplay())
                     .joinDate(user.getJoinDate())
                     .role(user.getRole().name())
-                    //.authorities(user.getAuthorities())
                     .isActive(user.isActive())
                     .isNotLocked(user.isNotLocked())
+                    .company(companyDTO)   
                     .isChangePassword(user.isChangePassword())
                     .build();
             

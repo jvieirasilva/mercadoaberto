@@ -1,0 +1,6 @@
+spring:
+  config:
+    activate:
+      on-profile: prod
+app:
+  frontend-url: https://main.d1zwzlsm520sqr.amplifyapp.com

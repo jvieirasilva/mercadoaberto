@@ -6,6 +6,9 @@ import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -42,4 +45,7 @@ public class ProductRequestDTO {
     
     @Builder.Default
     private List<MultipartFile> productImages = new ArrayList<>();
+    
+    @NotNull(message = "companyId  is required")
+    private Long companyId;
 }

@@ -20,8 +20,10 @@ public class EmailSender {
     private final String password = "yynw civi ejqb taph";
     
     
-    //@Value("${app.frontend.url}")
-    private String frontendUrl = "https://main.d1zwzlsm520sqr.amplifyapp.com";
+    @Value("${app.frontend-url}")
+    private String frontendUrl;
+    
+    
     
     /**
      * Envia email de confirmação de registro

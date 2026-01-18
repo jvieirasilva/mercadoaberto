@@ -49,6 +49,18 @@ public class ProductController {
         return ResponseEntity.ok(productService.search(term, pageable));
     }
     
+    /**
+     * Busca por termo em name OU description com paginação:
+     * /api/products/search?term=mouse&page=0&size=10&sort=name,asc
+     */
+    @GetMapping("/searchByCompany")
+    public ResponseEntity<Page<ProductResponseDTO>> searchCompany( @RequestParam Long companyId,
+            @RequestParam(name = "term", required = false, defaultValue = "") String term,
+            @PageableDefault(size = 10, sort = "id", direction = Sort.Direction.DESC) Pageable pageable
+    ) {
+        return ResponseEntity.ok(productService.searchByCompany(companyId, term, pageable));
+    }
+    
     
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

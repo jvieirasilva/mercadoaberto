@@ -19,4 +19,20 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
          )
         """)
     Page<Product> searchByNameOrDescription(@Param("term") String term, Pageable pageable);
+    
+    @Query("""
+    		   SELECT p
+    		     FROM Product p
+    		    WHERE p.company.id = :companyId
+    		      AND (
+    		           :term IS NULL OR :term = ''
+    		           OR LOWER(p.name) LIKE LOWER(CONCAT('%', :term, '%'))
+    		           OR LOWER(COALESCE(p.description, '')) LIKE LOWER(CONCAT('%', :term, '%'))
+    		      )
+    		""")
+    		Page<Product> searchByCompanyId(
+    		    @Param("companyId") Long companyId,
+    		    @Param("term") String term,
+    		    Pageable pageable
+    		);
 }

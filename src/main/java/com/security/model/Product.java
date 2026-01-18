@@ -13,6 +13,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
@@ -54,6 +55,10 @@ public class Product {
     @Column(name = "stock_quantity", nullable = false, precision = 10, scale = 2)
     private BigDecimal stockQuantity;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id", nullable = false)
+    @NotNull(message = "Company is required")
+    private Company company;
     
     @Column(length = 1000)
     private String description;

@@ -25,4 +25,6 @@ public class ProductResponseDTO {
     private BigDecimal stockQuantity;
     private String description;
     private Boolean isActive;
+    
+    private Long companyId;
 }

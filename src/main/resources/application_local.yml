@@ -1,0 +1,6 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+app:
+  frontend-url: ${FRONTEND_URL:http://localhost:3000}

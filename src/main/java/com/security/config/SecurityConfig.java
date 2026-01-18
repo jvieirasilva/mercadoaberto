@@ -48,6 +48,7 @@ public class SecurityConfig {
 	            .requestMatchers("/health").permitAll()
 	            .requestMatchers("/redis/**").permitAll() // ?? libera GET/POST/PUT/DELETE em /redis
 	            .requestMatchers("/api/cart/**").authenticated()
+	            .requestMatchers("/api/companies/**").authenticated()
 	            .requestMatchers(
 	                "/",
 	                "/health", 

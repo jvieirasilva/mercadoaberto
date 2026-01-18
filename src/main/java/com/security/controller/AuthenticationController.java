@@ -80,6 +80,14 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(@RequestBody AuthenticationRequest request) {
         AuthenticationResponse response = authenticationService.authenticate(request);
         
+        
+      /*  var c = response.getUser().getCompany();
+        
+        if (c != null) {
+          System.out.println("ID=" + c.getId());
+          System.out.println("NAME=" + c.getCompanyName());
+          System.out.println("EMAIL=" + c.getEmail() +"  - "+ c.getCity());
+        }*/
         // ✅ Retornar objeto completo no body (não nos headers)
         return ResponseEntity.ok(response);
     }
