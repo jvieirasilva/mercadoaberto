@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.security.dto.CompanyResponseDTO;
 import com.security.dto.RegisterRequest;
+import com.security.dto.RegisterRequestAdmin;
 import com.security.dto.UserDTO;
 import com.security.model.Company;
 import com.security.model.EmailVerificationToken;
@@ -66,6 +67,119 @@ public class AuthenticationService {
 			}
 
     public AuthenticationResponse register(RegisterRequest request) throws IOException {
+
+        LOGGER.info("Jose id:" + request.getFullName());
+        // ✅ VERIFICAR SE EMAIL JÁ EXISTE
+        if (repository.findByEmail(request.getEmail()).isPresent()) {
+            LOGGER.error("❌ Email já cadastrado: " + request.getEmail());
+            throw new RuntimeException("Este email já está cadastrado. Por favor, use outro email ou faça login.");
+        }
+        Role userRole = Role.USER; // default
+        if (request.getRole() != null && !request.getRole().isEmpty()) {
+            try {
+                userRole = Role.valueOf(request.getRole().toUpperCase());
+            } catch (IllegalArgumentException e) {
+                LOGGER.warn("Invalid role: " + request.getRole() + ". Using default USER role.");
+                userRole = Role.USER;
+            }
+        }
+
+        User user = User.builder()
+            .fullName(request.getFullName())
+            .email(request.getEmail())
+            .password(passwordEncoder.encode(request.getPassword()))
+            .role(userRole)
+            .joinDate(new Date())
+            .isActive(false)
+            .isNotLocked(false)
+            .isChangePassword(request.getIsChangePassword())
+            .build();
+        repository.save(user);
+        
+        String testToken = UUID.randomUUID().toString();
+        
+        
+        try {
+        	emailSender.sendConfirmationEmail(request.getEmail(), request.getFullName(), testToken);
+            LOGGER.info("✅ Email reenviado com sucesso para: " + request.getEmail());
+        } catch (Exception e) {
+            LOGGER.error("❌ Erro ao reenviar email: " + e.getMessage());
+            throw new RuntimeException("Erro ao enviar email de confirmação");
+        }
+        
+        String newToken = createEmailVerificationToken(request.getEmail(),testToken);
+        
+
+        
+        try {
+            if (request.getProfileImage() != null && !request.getProfileImage().isEmpty()) {
+                String originalFilename = request.getProfileImage().getOriginalFilename();
+                LOGGER.info("Nome original do arquivo: " + originalFilename);
+                
+                // Separar nome do arquivo e extensão
+                String fileNameWithoutExtension = "";
+                String fileExtension = "";
+                
+                if (originalFilename != null && originalFilename.contains(".")) {
+                    int lastDotIndex = originalFilename.lastIndexOf(".");
+                    fileNameWithoutExtension = originalFilename.substring(0, lastDotIndex);
+                    fileExtension = originalFilename.substring(lastDotIndex); // Inclui o ponto
+                } else {
+                    fileNameWithoutExtension = originalFilename != null ? originalFilename : "profile";
+                    fileExtension = ".png";
+                }
+                
+                LOGGER.info("Nome sem extensão: " + fileNameWithoutExtension);
+                LOGGER.info("Extensão: " + fileExtension);
+                
+                // Formato: jose_200.png
+               // String newFilename = fileNameWithoutExtension + "_" + user.getId() + fileExtension;
+                String newFilename =  user.getId() + fileExtension;
+                
+                LOGGER.info("Nome final a ser enviado para S3: " + newFilename);
+                
+                String imageUrl = s3UploadService.uploadProfileImage(
+                    newFilename,
+                    request.getProfileImage()
+                );
+                
+                LOGGER.info("URL retornada do S3: " + imageUrl);
+                
+                user.setProfileImageUrl(imageUrl);
+                user = repository.save(user);
+            }
+            LOGGER.info("Gravou o arquivo para user: " + user.getId());
+            
+        } catch (Exception e) {
+            LOGGER.error("Erro ao gravar o arquivo para user: " + user.getId(), e);
+        }
+
+        // Geração dos tokens JWT
+        var jwtToken = jwtService.generateToken(user);
+        var refreshToken = jwtService.generateRefreshToken(user);
+
+        // Criando o DTO do usuário
+        UserDTO userDTO = UserDTO.builder()
+                .id(user.getId())
+                .fullName(user.getFullName())
+                .email(user.getEmail())
+                .profileImageUrl(user.getProfileImageUrl())
+                .lastLoginDate(user.getLastLoginDate())
+                .lastLoginDateDisplay(user.getLastLoginDateDisplay())
+                .joinDate(user.getJoinDate())
+                .role(user.getRole().name())
+                .isActive(user.isActive())
+                .isNotLocked(user.isNotLocked())
+                .isChangePassword(user.isChangePassword())
+                .build();
+
+        return AuthenticationResponse.builder()
+                .accessToken(jwtToken)
+                .refreshToken(refreshToken)
+                .user(userDTO)
+                .build();
+    }
+    public AuthenticationResponse registerAdmin(RegisterRequestAdmin request) throws IOException {
 
         LOGGER.info("Jose id:" + request.getFullName());
         // ✅ VERIFICAR SE EMAIL JÁ EXISTE
@@ -271,17 +385,26 @@ public class AuthenticationService {
     }
     
     /**
-     * Pesquisa usuários por nome ou email com paginação
+     * ✅ ATUALIZADO - Pesquisa usuários por nome/email e opcionalmente por company
      * 
      * @param searchTerm Termo de busca (nome ou email)
+     * @param companyId ID da empresa (opcional - se null, busca todos)
      * @param pageable Informações de paginação e ordenação
      * @return Página de UserDTO
      */
-    public Page<UserDTO> searchUsersByName(String searchTerm, Pageable pageable) {
-        LOGGER.info("Pesquisando usuários com termo: '{}', página: {}, tamanho: {}", 
-                    searchTerm, pageable.getPageNumber(), pageable.getPageSize());
+    public Page<UserDTO> searchUsersByName(String searchTerm, Long companyId, Pageable pageable) {
+        LOGGER.info("Pesquisando usuários com termo: '{}', companyId: {}, página: {}, tamanho: {}", 
+                    searchTerm, companyId, pageable.getPageNumber(), pageable.getPageSize());
         
-        Page<User> users = repository.searchByNameOrEmail(searchTerm, pageable);
+        Page<User> users;
+        
+        if (companyId != null) {
+            // Busca com filtro de company
+            users = repository.searchByNameOrEmailAndCompany(searchTerm, companyId, pageable);
+        } else {
+            // Busca sem filtro de company (todos os usuários)
+            users = repository.searchByNameOrEmail(searchTerm, pageable);
+        }
         
         // Converter Page<User> para Page<UserDTO>
         Page<UserDTO> userDTOs = users.map(this::toDTO);
