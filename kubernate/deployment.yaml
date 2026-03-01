@@ -21,12 +21,6 @@ spec:
         env:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
-          - name: AWS_ACCESS_KEY_ID
-            value: "AKIASONAWKKRDB2PEIKW"
-          - name: AWS_SECRET_ACCESS_KEY
-            value: "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"
-          - name: AWS_REGION
-            value: "us-east-1"
         ports:
           - containerPort: 8080
         resources:
@@ -48,4 +42,3 @@ spec:
             port: 8080
           initialDelaySeconds: 60
           periodSeconds: 5
-          
