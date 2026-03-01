@@ -30,7 +30,7 @@ import com.security.service.CustomUserDetailsService;
 public class SecurityConfig {
 
 	private final JwtAuthenticationFilter jwtAuthFilter;
-	// private final UserDetailsService userDetailsService;
+	// private final UserDetailsService userDetailsService;  
 	private final CustomUserDetailsService userDetailsService;
 
 	public SecurityConfig(JwtAuthenticationFilter jwtAuthFilter, CustomUserDetailsService userDetailsService) {
