@@ -47,7 +47,7 @@ jobs:
 
     - name: 🚀 Deploy no EKS
       run: |
-        kubectl apply -f kubernate/deployment
+        kubectl apply -f kubernate/deployment.yaml
         kubectl rollout restart deployment/spring-api-deployment
         kubectl rollout status deployment/spring-api-deployment --timeout=300s
         echo "✅ Deploy concluído!"
