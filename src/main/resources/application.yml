@@ -10,6 +10,12 @@ server:
     context-path: /
 
 spring:
+  kafka:
+    consumer:
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      group-id: cartao-credito-group-v3	
   profiles:
     active: ${SPRING_PROFILES_ACTIVE:local}  
   application:

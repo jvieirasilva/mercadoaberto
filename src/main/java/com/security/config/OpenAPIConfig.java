@@ -28,22 +28,20 @@ import io.swagger.v3.oas.annotations.servers.Server;
         ),
         servers = {
                 @Server(
+                        description = "Local Development",
+                        url = "http://localhost:8081"
+                ),
+                @Server(
                         description = "AWS Production",
-                        url = "http://44.201.53.3:8080"  // ⬅️ ATUALIZE AQUI
+                        url = "http://44.201.53.3:8080"
                 ),
                 @Server(
                         description = "Minikube Local",
                         url = "http://192.168.49.2:30999"
-                ),
-                @Server(
-                        description = "Local Development",
-                        url = "http://localhost:8080"
                 )
         },
         security = {
-                @SecurityRequirement(
-                        name = "bearerAuth"
-                )
+                @SecurityRequirement(name = "bearerAuth")
         }
 )
 @SecurityScheme(
