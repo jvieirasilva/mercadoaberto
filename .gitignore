@@ -27,6 +27,7 @@ target/
 application-*.yml
 application-*.yaml
 application-*.properties
+!application-test.yml
 
 ############################
 # AWS / Kubernetes / ECS
