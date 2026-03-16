@@ -24,6 +24,12 @@ spec:
               value: "mercadoaberto-prod"
             - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
               value: "kafka-service:9092"
+            - name: AUTH_TYPE
+              value: "LOGIN_FORM"
+            - name: SPRING_SECURITY_USER_NAME
+              value: "admin"
+            - name: SPRING_SECURITY_USER_PASSWORD
+              value: "admin123"
             - name: DYNAMIC_CONFIG_ENABLED
               value: "true"
           resources:
