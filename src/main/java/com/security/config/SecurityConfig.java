@@ -51,7 +51,7 @@ public class SecurityConfig {
 	            .requestMatchers("/api/companies/**").authenticated()
 	            .requestMatchers(HttpMethod.GET, "/api/products/search").permitAll()
                 .requestMatchers(HttpMethod.GET, "/api/products/searchByCompany").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/card").permitAll() 
+                //.requestMatchers(HttpMethod.POST, "/api/card").permitAll() 
 	            .requestMatchers(
 	                "/",
 	                "/health", 
