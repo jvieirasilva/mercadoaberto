@@ -15,6 +15,12 @@ target/
 *.rar
 
 ############################
+# Scripts locais
+############################
+start.sh
+stop.sh
+
+############################
 # Maven Wrapper
 ############################
 !.mvn/wrapper/maven-wrapper.jar

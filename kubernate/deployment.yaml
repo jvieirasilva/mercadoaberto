@@ -21,6 +21,8 @@ spec:
         env:
           - name: SPRING_PROFILES_ACTIVE
             value: "prod"
+          - name: SPRING_KAFKA_BOOTSTRAP_SERVERS  # ✅ ADICIONADO
+            value: "kafka-service:9092"            # ✅ ADICIONADO
         ports:
           - containerPort: 8080
         resources:
