@@ -61,19 +61,22 @@ services:
       start_period: 30s
 
   kafka-ui:
-    image: provectuslabs/kafka-ui:latest
-    container_name: mercado-kafka-ui
-    restart: always
-    ports:
-      - "8090:8080"
-    environment:
-      KAFKA_CLUSTERS_0_NAME: local
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
-    depends_on:
-      kafka:
-        condition: service_healthy
-    networks:
-      - app-network
+        image: provectuslabs/kafka-ui:latest
+        container_name: mercado-kafka-ui
+        restart: always
+        ports:
+          - "8090:8080"
+        environment:
+          KAFKA_CLUSTERS_0_NAME: local
+          KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+          AUTH_TYPE: LOGIN_FORM
+          SPRING_SECURITY_USER_NAME: admin
+          SPRING_SECURITY_USER_PASSWORD: admin123
+        depends_on:
+          kafka:
+            condition: service_healthy
+        networks:
+          - app-network
 
 networks:
   app-network:
