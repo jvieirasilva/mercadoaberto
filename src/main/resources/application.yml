@@ -3,7 +3,14 @@ aws:
   s3:
     bucket: order-app-api
     product-bucket: order-app-product-api
-
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    url: /v3/api-docs
 server:
   port: 8080  # ?? Volta pra 8080 
   servlet:
@@ -40,9 +47,3 @@ application:
       expiration: 86400000
       refresh-token:
         expiration: 604800000
-
-springdoc:
-  swagger-ui:
-    path: /swagger-ui.html
-  api-docs:
-    enabled: true

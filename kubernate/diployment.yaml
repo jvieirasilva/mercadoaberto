@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: spring-api-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: spring-api
+  template:
+    metadata:
+      labels:
+        app: spring-api
+    spec:
+      containers:
+      - name: spring-api-container
+        image: jv031969/spring-security:latest  # ?? MUDOU AQUI!
+        imagePullPolicy: Always
+        env:
+          - name: SPRING_PROFILES_ACTIVE
+            value: "prod"
+          - name: AWS_ACCESS_KEY_ID
+            value: "AKIASONAWKKRDB2PEIKW"
+          - name: AWS_SECRET_ACCESS_KEY
+            value: "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"
+          - name: AWS_REGION
+            value: "us-east-1"
+        ports:
+          - containerPort: 8080
+        resources:
+          requests:
+            memory: "512Mi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "1000m"
+        livenessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 60
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /actuator/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
