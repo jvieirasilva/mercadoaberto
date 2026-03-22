@@ -1,0 +1,75 @@
+# ═══════════════════════════════════════════════════════════════════
+# Configuração de testes — profile "test"
+# Activar com: @ActiveProfiles("test") nas classes de teste
+# ═══════════════════════════════════════════════════════════════════
+
+spring:
+
+  # ─── Base de dados H2 (em memória) ────────────────────────────────
+  # Substitui o MySQL do application-local.yml durante os testes.
+  # Não precisa de servidor externo — corre dentro da JVM.
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=false;MODE=MySQL
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  # ─── JPA ──────────────────────────────────────────────────────────
+  jpa:
+    hibernate:
+      # create-drop: cria o schema antes de cada teste e apaga no final
+      ddl-auto: create-drop
+    show-sql: false                       # true se precisares de debug SQL
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: false
+
+  # ─── H2 Console (opcional — abre em http://localhost:8080/h2-console) ─
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+  # ─── Redis (desactivar nos testes unitários) ──────────────────────
+  # Os testes unitários usam Mockito, não precisam de Redis real.
+  # Se precisares de testes de integração com Redis usa Testcontainers.
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration
+      - org.springframework.boot.autoconfigure.data.redis.RedisRepositoriesAutoConfiguration
+
+  # ─── Kafka (desactivar nos testes unitários) ──────────────────────
+  # Os testes de serviço fazem mock do KafkaTemplate.
+  # Para testes de integração Kafka usa @EmbeddedKafka.
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      auto-offset-reset: earliest
+
+# ─── JWT ────────────────────────────────────────────────────────────
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000
+      refresh-token:
+        expiration: 604800000
+
+# ─── AWS (mock nos testes — S3UploadService é mockado com Mockito) ──
+aws:
+  region: us-east-1
+  s3:
+    bucket: test-bucket
+    product-bucket: test-product-bucket
+
+# ─── Frontend URL (usado no EmailSender) ────────────────────────────
+app:
+  frontend-url: http://localhost:3000
+
+# ─── Logging ────────────────────────────────────────────────────────
+logging:
+  level:
+    com.security: WARN          # reduz ruído nos testes
+    org.springframework: WARN
+    org.hibernate: WARN

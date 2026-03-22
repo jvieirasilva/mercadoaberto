@@ -15,6 +15,12 @@ target/
 *.rar
 
 ############################
+# Scripts locais
+############################
+start.sh
+stop.sh
+
+############################
 # Maven Wrapper
 ############################
 !.mvn/wrapper/maven-wrapper.jar
@@ -27,6 +33,7 @@ target/
 application-*.yml
 application-*.yaml
 application-*.properties
+!application-test.yml
 
 ############################
 # AWS / Kubernetes / ECS
@@ -93,3 +100,8 @@ Thumbs.db
 ############################
 *.orig
 *.rej
+
+############################
+# Windows
+############################
+*.Identifier
