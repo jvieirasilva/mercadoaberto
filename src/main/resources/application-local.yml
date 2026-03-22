@@ -6,10 +6,11 @@ spring:
       on-profile: local
   
   datasource:
-    url: jdbc:mysql://localhost:3306/training?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
-    username: root
-    password: admin
+    url: jdbc:mysql://order-app-db.cobw46ksedm2.us-east-1.rds.amazonaws.com:3306/orderapp 
+    username: admin
+    password: OrderApp2025!
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 app:
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
+  
