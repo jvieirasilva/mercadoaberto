@@ -23,7 +23,10 @@ server:
       enabled: true
 
 app:
-  frontend-url: https://main.d1zwzlsm520sqr.amplifyapp.com
+  mail:
+    username: rodriguesreginavieira@gmail.com
+    password: yynw civi ejqb taph
+  frontend-url: https://main.d1zwzlsm520sqr.amplifyapp.com 
 
 management:
   endpoints:

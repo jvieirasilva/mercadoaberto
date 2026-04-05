@@ -16,9 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class EmailSender {
     
-    private final String username = "rodriguesreginavieira@gmail.com";
-    private final String password = "yynw civi ejqb taph";
-    
+	@Value("${app.mail.username}")
+	private String username;
+
+	@Value("${app.mail.password}")
+	private String password;
     
     @Value("${app.frontend-url}")
     private String frontendUrl;

@@ -2,11 +2,11 @@ server:
   port: 8081
 spring:
   kafka:
-    bootstrap-servers: localhost:29092	
+    bootstrap-servers: localhost:29092
   config:
     activate:
       on-profile: local
-  
+
   datasource:
     url: jdbc:mysql://order-app-db.cobw46ksedm2.us-east-1.rds.amazonaws.com:3306/orderapp
     username: admin
@@ -14,4 +14,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
 
 app:
+  mail:
+    username: rodriguesreginavieira@gmail.com
+    password: yynw civi ejqb taph
   frontend-url: ${FRONTEND_URL:http://localhost:3000}
