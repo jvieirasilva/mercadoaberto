@@ -1,0 +1,19 @@
+docker logs mercadopago-api --tail 20
+
+senha sonar
+Sonar@2026!Abc
+token sonar:
+sqp_65dd128c9883328a4f5573e414e63d1b5800640d
+
+mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+  -Dsonar.projectKey=mercadoaberto \
+  -Dsonar.projectName='mercadoaberto' \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.token=sqp_65dd128c9883328a4f5573e414e63d1b5800640d
+  
+  
+  http://localhost:9000/dashboard?id=mercadoaberto
+  
+  mvn clean verify sonar:sonar -Dsonar.token=sqp_65dd128c9883328a4f5573e414e63d1b5800640d
+  
+  mvn clean verify sonar:sonar
