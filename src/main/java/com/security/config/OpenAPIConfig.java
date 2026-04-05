@@ -41,7 +41,7 @@ import io.swagger.v3.oas.annotations.servers.Server;
                 ),
                 @Server(
                         description = "AWS Production - EKS",
-                        url = "http://ac69fe1aa3b7441aab633c34b1c76c23-462073458.us-east-1.elb.amazonaws.com"
+                        url = "http://af5b37258738e4a3585520795f023200-1111014142.us-east-1.elb.amazonaws.com"
                 )
         },
         security = {

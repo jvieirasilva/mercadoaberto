@@ -37,6 +37,7 @@
         <sonar.token>SEU_TOKEN_AQUI</sonar.token> 
 		<sonar.language>java</sonar.language>
 		<sonar.java.source>21</sonar.java.source>
+		<sonar.token>sqp_65dd128c9883328a4f5573e414e63d1b5800640d</sonar.token>
 
 		<!-- ✅ Diz ao Sonar onde está o relatório do JaCoCo -->
 		<sonar.coverage.jacoco.xmlReportPaths>
@@ -270,7 +271,7 @@
 										<limit>
 											<counter>LINE</counter>
 											<value>COVEREDRATIO</value>
-											<minimum>0.60</minimum>
+											<minimum>0.80</minimum>
 										</limit>
 									</limits>
 								</rule>
