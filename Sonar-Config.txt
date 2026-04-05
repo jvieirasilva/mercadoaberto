@@ -17,3 +17,4 @@ mvn clean verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
   mvn clean verify sonar:sonar -Dsonar.token=sqp_65dd128c9883328a4f5573e414e63d1b5800640d
   
   mvn clean verify sonar:sonar
+  mvn clean test sonar:sonar

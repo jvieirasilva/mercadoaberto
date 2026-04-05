@@ -180,12 +180,7 @@ public class AuthenticationController {
     ) {
         try {
             authenticationService.confirmEmail(token);
-            
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Email confirmado com sucesso! Você já pode fazer login.");
-            response.put("status", "success");
-            
-            return ResponseEntity.ok(response);
+            return ResponseEntity.ok(buildResponse("success", "Email confirmado com sucesso!"));
             
         } catch (RuntimeException e) {
             Map<String, String> response = new HashMap<>();
@@ -219,11 +214,7 @@ public class AuthenticationController {
             return ResponseEntity.ok(response);
 
         } catch (RuntimeException e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("message", e.getMessage());
-            response.put("status", "error");
-
-            return ResponseEntity.badRequest().body(response);
+        	return ResponseEntity.badRequest().body(buildResponse("error", e.getMessage()));
         }
     }
 
@@ -268,4 +259,11 @@ public class AuthenticationController {
         }
     }
 
+    private Map<String, String> buildResponse(String status, String message) {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", status);
+        response.put("message", message);
+        return response;
+    }
+    
 }
