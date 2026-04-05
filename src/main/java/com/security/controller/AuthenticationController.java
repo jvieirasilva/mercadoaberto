@@ -96,11 +96,14 @@ public class AuthenticationController {
     @GetMapping("/users/search")
     @Operation(
         summary = "Pesquisar usuários por nome",
-        description = "Retorna uma lista paginada de usuários filtrados por nome (fullName ou email)"
+        description = "Retorna uma lista paginada de usuários filtrados por nome (fullName ou email) e opcionalmente por empresa"
     )
     public ResponseEntity<Page<UserDTO>> searchUsers(
             @Parameter(description = "Nome ou email do usuário para filtrar")
             @RequestParam(required = false, defaultValue = "") String name,
+            
+            @Parameter(description = "ID da empresa para filtrar (opcional)")
+            @RequestParam(required = false) Long companyId,
             
             @Parameter(description = "Número da página (começa em 0)")
             @RequestParam(defaultValue = "0") int page,
@@ -120,7 +123,8 @@ public class AuthenticationController {
         
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortDirection, sortBy));
         
-        Page<UserDTO> users = authenticationService.searchUsersByName(name, pageable);
+        // ✅ Passa companyId para o service
+        Page<UserDTO> users = authenticationService.searchUsersByName(name, companyId, pageable);
         
         return ResponseEntity.ok(users);
     }

@@ -52,5 +52,24 @@ public interface UserRepository extends JpaRepository<User, Long> {
         AND u.isNotLocked = true
     """)
     Page<User> searchByNameOrEmail(@Param("searchTerm") String searchTerm, Pageable pageable);
+    
+    /**
+     * ✅ NOVO - Pesquisa usuários por nome ou email E companyId
+     * Se companyId for null, retorna todos os usuários (sem filtro de company)
+     */
+    @Query("""
+        SELECT u FROM User u
+        WHERE (
+            LOWER(u.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+            OR LOWER(u.email) LIKE LOWER(CONCAT('%', :searchTerm, '%'))
+        )
+        AND (:companyId IS NULL OR u.company.id = :companyId)
+        AND u.isActive = true
+        AND u.isNotLocked = true
+    """)
+    Page<User> searchByNameOrEmailAndCompany(
+        @Param("searchTerm") String searchTerm, 
+        @Param("companyId") Long companyId, 
+        Pageable pageable
+    );
 }
-
