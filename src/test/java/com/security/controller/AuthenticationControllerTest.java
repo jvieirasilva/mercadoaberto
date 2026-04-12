@@ -113,7 +113,8 @@ class AuthenticationControllerTest {
             UserDTO userDTO = new UserDTO();
             userDTO.setEmail("jose@test.com");
 
-            when(authenticationService.searchUsersByName(anyString(), any(Pageable.class)))
+            // Corrigido: searchUsersByName agora recebe (String, Long, Pageable)
+            when(authenticationService.searchUsersByName(anyString(), anyLong(), any(Pageable.class)))
                     .thenReturn(buildPage(userDTO));
 
             mockMvc.perform(get("/api/auth/users/search").param("name", "jose"))

@@ -379,7 +379,7 @@ class AuthenticationServiceTest {
             Page<User> userPage = new PageImpl<>(List.of(activeUser), pageable, 1);
             when(repository.searchByNameOrEmail("José", pageable)).thenReturn(userPage);
 
-            Page<UserDTO> result = authenticationService.searchUsersByName("José", pageable);
+            Page<UserDTO> result = authenticationService.searchUsersByName("José", 1L, pageable);
 
             assertThat(result).isNotNull();
             assertThat(result.getTotalElements()).isEqualTo(1);
@@ -393,7 +393,7 @@ class AuthenticationServiceTest {
             Page<User> emptyPage = new PageImpl<>(List.of(), pageable, 0);
             when(repository.searchByNameOrEmail("xyz", pageable)).thenReturn(emptyPage);
 
-            Page<UserDTO> result = authenticationService.searchUsersByName("xyz", pageable);
+            Page<UserDTO> result = authenticationService.searchUsersByName("xyz", 1L, pageable);
 
             assertThat(result.getContent()).isEmpty();
             assertThat(result.getTotalElements()).isZero();
